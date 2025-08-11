@@ -1,212 +1,197 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8">
+  <title>Baby Feed Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      background: #f0f4f8; 
+      padding: 15px; 
+    }
+    h1 { 
+      color: #333; 
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    #lastFed { 
+      font-weight: bold; 
+      color: #007BFF; 
+      text-align: center; 
+      font-size: 1.2em; 
+      margin-bottom: 20px; 
+    }
+    form { 
+      background: white; 
+      padding: 15px; 
+      border-radius: 10px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+      margin-bottom: 20px; 
+    }
+    label { 
+      display: block; 
+      margin-top: 15px; 
+      font-weight: bold; 
+    }
+    select, button { 
+      width: 100%; 
+      padding: 12px; 
+      font-size: 1em; 
+      margin-top: 5px; 
+      border-radius: 8px; 
+      border: 1px solid #ccc; 
+      box-sizing: border-box; 
+    }
+    button { 
+      background: #007BFF; 
+      color: white; 
+      font-weight: bold; 
+      border: none; 
+      margin-top: 20px;
+      cursor: pointer; 
+    }
+    button:hover { 
+      background: #0056b3; 
+    }
+    h2 { 
+      margin-top: 0; 
+      margin-bottom: 10px;
+    }
+    #feedList { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+    }
+    .feed-entry { 
+      background: white; 
+      border-radius: 10px; 
+      padding: 12px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .feed-entry strong {
+      font-size: 1.1em;
+      color: #333;
+    }
+    .feed-entry small {
+      color: #777;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Baby Feed Tracker&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: Arial, sans-serif;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #f0f4f8;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 15px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h1 {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #333;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#lastFed {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #007BFF;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.2em;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>form {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 15px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 10px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 5px rgba(0,0,0,0.1);<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>label {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 15px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>select, button {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1em;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 5px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #ccc;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-sizing: border-box;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>button {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #007BFF;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>button:hover {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #0056b3;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h2 {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 0;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#feedList {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 10px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.feed-entry {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 10px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 5px rgba(0,0,0,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.feed-entry strong {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.1em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.feed-entry small {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #777;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.9em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;h1&gt;Baby Feed Tracker&lt;/h1&gt;</p>
-<p class="p1">&lt;div id="lastFed"&gt;Last fed: —&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;form id="feedForm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;label&gt;Feeding Type:</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="feedingType" required&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value=""&gt;Select...&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Bottle"&gt;Bottle&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Breast milk (bottle)"&gt;Breast milk (bottle)&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Breast fed"&gt;Breast fed&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/label&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;label&gt;Baby's Mood:</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="mood" required&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value=""&gt;Select...&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Happy"&gt;Happy&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Easy"&gt;Easy&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Struggling"&gt;Struggling&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="Didn't eat"&gt;Didn't eat&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/label&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button type="submit"&gt;Add Feed&lt;/button&gt;</p>
-<p class="p1">&lt;/form&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;h2&gt;Feed History&lt;/h2&gt;</p>
-<p class="p1">&lt;div id="feedList"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- Firebase SDK --&gt;</p>
-<p class="p1">&lt;script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"&gt;&lt;/script&gt;</p>
-<p class="p1">&lt;script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"&gt;&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// TODO: Replace with your Firebase project details</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const firebaseConfig = {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",</p>
-<p class="p1"><span class="Apple-converted-space">    </span>authDomain: "niko-s-feeding-tracker.firebaseapp.com",</p>
-<p class="p1"><span class="Apple-converted-space">    </span>databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",</p>
-<p class="p1"><span class="Apple-converted-space">    </span>projectId: "niko-s-feeding-tracker”,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>storageBucket: "niko-s-feeding-tracker.firebasestorage.app",</p>
-<p class="p1"><span class="Apple-converted-space">    </span>messagingSenderId: "905511735532",</p>
-<p class="p1"><span class="Apple-converted-space">    </span>appId: "1:905511735532:web:e570c521ec91dee88895c9"</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const app = firebase.initializeApp(firebaseConfig);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const db = firebase.database();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const feedForm = document.getElementById('feedForm');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const feedList = document.getElementById('feedList');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lastFedDisplay = document.getElementById('lastFed');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let latestFeedTime = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>feedForm.addEventListener('submit', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>e.preventDefault();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const feedingType = document.getElementById('feedingType').value;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const mood = document.getElementById('mood').value;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const timestamp = new Date().toISOString();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>db.ref('feeds').push({</p>
-<p class="p1"><span class="Apple-converted-space">      </span>feedingType,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>mood,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>timestamp</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>feedForm.reset();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>db.ref('feeds').on('value', (snapshot) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const feeds = snapshot.val();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>feedList.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (feeds) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const sortedFeeds = Object.values(feeds)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.sort((a, b) =&gt; new Date(b.timestamp) - new Date(a.timestamp));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>sortedFeeds.forEach(feed =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const div = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>div.className = 'feed-entry';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>div.innerHTML = `&lt;strong&gt;${feed.feedingType}&lt;/strong&gt; - ${feed.mood} &lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                         </span>&lt;small&gt;${new Date(feed.timestamp).toLocaleString()}&lt;/small&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>feedList.appendChild(div);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>latestFeedTime = new Date(sortedFeeds[0].timestamp);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>updateLastFed(); // update immediately when data changes</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function updateLastFed() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (latestFeedTime) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffMs = new Date() - latestFeedTime;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffMins = Math.floor(diffMs / 60000);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffMins &lt; 1) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>lastFedDisplay.textContent = "Last fed: just now";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else if (diffMins &lt; 60) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>lastFedDisplay.textContent = `Last fed: ${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const hours = Math.floor(diffMins / 60);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const mins = diffMins % 60;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>lastFedDisplay.textContent = `Last fed: ${hours}h ${mins}m ago`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>lastFedDisplay.textContent = "Last fed: —";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>setInterval(updateLastFed, 10000); // update every 10s</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<h1>Baby Feed Tracker</h1>
+<div id="lastFed">Last fed: —</div>
+
+<form id="feedForm">
+  <label>Feeding Type:
+    <select id="feedingType" required>
+      <option value="">Select...</option>
+      <option value="Bottle">Bottle</option>
+      <option value="Breast milk (bottle)">Breast milk (bottle)</option>
+      <option value="Breast fed">Breast fed</option>
+    </select>
+  </label>
+
+  <label>Baby's Mood:
+    <select id="mood" required>
+      <option value="">Select...</option>
+      <option value="Happy">Happy</option>
+      <option value="Easy">Easy</option>
+      <option value="Struggling">Struggling</option>
+      <option value="Didn't eat">Didn't eat</option>
+    </select>
+  </label>
+
+  <button type="submit">Add Feed</button>
+</form>
+
+<h2>Feed History</h2>
+<div id="feedList"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"></script>
+
+<script>
+  // TODO: Replace with your Firebase project details
+  const firebaseConfig = {
+  apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
+  authDomain: "niko-s-feeding-tracker.firebaseapp.com",
+  databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
+  projectId: "niko-s-feeding-tracker",
+  storageBucket: "niko-s-feeding-tracker.firebasestorage.app",
+  messagingSenderId: "905511735532",
+  appId: "1:905511735532:web:e570c521ec91dee88895c9",
+  measurementId: "G-HX96P43JNP"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const feedForm = document.getElementById('feedForm');
+  const feedList = document.getElementById('feedList');
+  const lastFedDisplay = document.getElementById('lastFed');
+
+  let latestFeedTime = null;
+
+  feedForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const feedingType = document.getElementById('feedingType').value;
+    const mood = document.getElementById('mood').value;
+    const timestamp = new Date().toISOString();
+
+    db.ref('feeds').push({
+      feedingType,
+      mood,
+      timestamp
+    });
+
+    feedForm.reset();
+  });
+
+  db.ref('feeds').on('value', (snapshot) => {
+    const feeds = snapshot.val();
+    feedList.innerHTML = '';
+    if (feeds) {
+      const sortedFeeds = Object.values(feeds)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      sortedFeeds.forEach(feed => {
+        const div = document.createElement('div');
+        div.className = 'feed-entry';
+        div.innerHTML = `<strong>${feed.feedingType}</strong> - ${feed.mood} <br>
+                         <small>${new Date(feed.timestamp).toLocaleString()}</small>`;
+        feedList.appendChild(div);
+      });
+
+      latestFeedTime = new Date(sortedFeeds[0].timestamp);
+      updateLastFed(); // update immediately when data changes
+    }
+  });
+
+  function updateLastFed() {
+    if (latestFeedTime) {
+      const diffMs = new Date() - latestFeedTime;
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) {
+        lastFedDisplay.textContent = "Last fed: just now";
+      } else if (diffMins < 60) {
+        lastFedDisplay.textContent = `Last fed: ${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+      } else {
+        const hours = Math.floor(diffMins / 60);
+        const mins = diffMins % 60;
+        lastFedDisplay.textContent = `Last fed: ${hours}h ${mins}m ago`;
+      }
+    } else {
+      lastFedDisplay.textContent = "Last fed: —";
+    }
+  }
+
+  setInterval(updateLastFed, 10000); // update every 10s
+</script>
+
 </body>
 </html>

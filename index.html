@@ -6,12 +6,21 @@
   <title>Niko's Feeding Tracker</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #b3d9ff; /* Baby blue */
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
+  font-family: Arial, sans-serif;
+  background-color: #b3d9ff; /* Baby blue base */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.3) 40px,
+    rgba(255,255,255,0.3) 80px
+  ),
+  url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ctext x='20' y='40' font-size='40'%3E🪿%3C/text%3E%3Ctext x='100' y='140' font-size='40'%3E🦀%3C/text%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
     h1 {
       color: #003366;
     }

@@ -1,197 +1,163 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Baby Feed Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Niko's Feeding Tracker</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      margin: 0; 
-      background: #f0f4f8; 
-      padding: 15px; 
-    }
-    h1 { 
-      color: #333; 
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #b3d9ff; /* Baby blue */
+      margin: 0;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 10px;
     }
-    #lastFed { 
-      font-weight: bold; 
-      color: #007BFF; 
-      text-align: center; 
-      font-size: 1.2em; 
-      margin-bottom: 20px; 
+    h1 {
+      color: #003366;
     }
-    form { 
-      background: white; 
-      padding: 15px; 
-      border-radius: 10px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-      margin-bottom: 20px; 
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    label { 
-      display: block; 
-      margin-top: 15px; 
-      font-weight: bold; 
+    button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #3399ff;
+      color: white;
+      cursor: pointer;
     }
-    select, button { 
-      width: 100%; 
-      padding: 12px; 
-      font-size: 1em; 
-      margin-top: 5px; 
-      border-radius: 8px; 
-      border: 1px solid #ccc; 
-      box-sizing: border-box; 
+    select {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
     }
-    button { 
-      background: #007BFF; 
-      color: white; 
-      font-weight: bold; 
-      border: none; 
-      margin-top: 20px;
-      cursor: pointer; 
+    .feed-entry {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
     }
-    button:hover { 
-      background: #0056b3; 
-    }
-    h2 { 
-      margin-top: 0; 
-      margin-bottom: 10px;
-    }
-    #feedList { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 10px; 
-    }
-    .feed-entry { 
-      background: white; 
-      border-radius: 10px; 
-      padding: 12px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .feed-entry strong {
-      font-size: 1.1em;
-      color: #333;
-    }
-    .feed-entry small {
-      color: #777;
-      font-size: 0.9em;
+    .last-fed {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
 
-<h1>Baby Feed Tracker</h1>
-<div id="lastFed">Last fed: —</div>
+  <div class="container">
+    <h1>Niko's Feeding Tracker</h1>
+    <div class="last-fed" id="lastFed">Last fed: calculating...</div>
 
-<form id="feedForm">
-  <label>Feeding Type:
-    <select id="feedingType" required>
-      <option value="">Select...</option>
-      <option value="Bottle">Bottle</option>
-      <option value="Breast milk (bottle)">Breast milk (bottle)</option>
-      <option value="Breast fed">Breast fed</option>
-    </select>
-  </label>
+    <div>
+      <h3>Feeding Type</h3>
+      <button onclick="logFeed('Breastfed')">Breastfed</button>
+      <button onclick="logFeed('Bottle - Formula')">Bottle - Formula</button>
+      <button onclick="logFeed('Bottle - Breast Milk')">Bottle - Breast Milk</button>
+    </div>
 
-  <label>Baby's Mood:
-    <select id="mood" required>
-      <option value="">Select...</option>
-      <option value="Happy">Happy</option>
-      <option value="Easy">Easy</option>
-      <option value="Struggling">Struggling</option>
-      <option value="Didn't eat">Didn't eat</option>
-    </select>
-  </label>
+    <div>
+      <h3>Mood During Feeding</h3>
+      <select id="moodSelect">
+        <option value="Happy">Happy</option>
+        <option value="Easy">Easy</option>
+        <option value="Struggling">Struggling</option>
+        <option value="Didn't eat">Didn't eat</option>
+      </select>
+    </div>
 
-  <button type="submit">Add Feed</button>
-</form>
+    <h3>Feeding History</h3>
+    <div id="feedHistory"></div>
+  </div>
 
-<h2>Feed History</h2>
-<div id="feedList"></div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"></script>
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
+      authDomain: "niko-s-feeding-tracker.firebaseapp.com",
+      databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
+      projectId: "niko-s-feeding-tracker",
+      storageBucket: "niko-s-feeding-tracker.firebasestorage.app",
+      messagingSenderId: "905511735532",
+      appId: "1:905511735532:web:e570c521ec91dee88895c9"
+    };
 
-<script>
-  // TODO: Replace with your Firebase project details
-  const firebaseConfig = {
-  apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
-  authDomain: "niko-s-feeding-tracker.firebaseapp.com",
-  databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
-  projectId: "niko-s-feeding-tracker",
-  storageBucket: "niko-s-feeding-tracker.firebasestorage.app",
-  messagingSenderId: "905511735532",
-  appId: "1:905511735532:web:e570c521ec91dee88895c9",
-  measurementId: "G-HX96P43JNP"
-  };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    const lastFedElement = document.getElementById('lastFed');
+    const feedHistoryElement = document.getElementById('feedHistory');
 
-  const feedForm = document.getElementById('feedForm');
-  const feedList = document.getElementById('feedList');
-  const lastFedDisplay = document.getElementById('lastFed');
+    function logFeed(type) {
+      const mood = document.getElementById('moodSelect').value;
+      const timestamp = Date.now();
 
-  let latestFeedTime = null;
+      db.ref('feeds').push({
+        type,
+        mood,
+        timestamp
+      });
+    }
 
-  feedForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const feedingType = document.getElementById('feedingType').value;
-    const mood = document.getElementById('mood').value;
-    const timestamp = new Date().toISOString();
+    function updateLastFed(feeds) {
+      if (feeds.length === 0) {
+        lastFedElement.textContent = "Last fed: no data yet";
+        return;
+      }
+      feeds.sort((a, b) => b.timestamp - a.timestamp);
+      const lastFeed = feeds[0];
+      const timeAgo = timeSince(new Date(lastFeed.timestamp));
+      lastFedElement.textContent = `Last fed: ${timeAgo} ago (${lastFeed.type}, Mood: ${lastFeed.mood})`;
+    }
 
-    db.ref('feeds').push({
-      feedingType,
-      mood,
-      timestamp
-    });
+    function timeSince(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      let interval = Math.floor(seconds / 3600);
+      if (interval >= 1) {
+        return interval + " hour" + (interval > 1 ? "s" : "");
+      }
+      interval = Math.floor(seconds / 60);
+      if (interval >= 1) {
+        return interval + " minute" + (interval > 1 ? "s" : "");
+      }
+      return Math.floor(seconds) + " seconds";
+    }
 
-    feedForm.reset();
-  });
-
-  db.ref('feeds').on('value', (snapshot) => {
-    const feeds = snapshot.val();
-    feedList.innerHTML = '';
-    if (feeds) {
-      const sortedFeeds = Object.values(feeds)
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-      sortedFeeds.forEach(feed => {
+    function renderHistory(feeds) {
+      feedHistoryElement.innerHTML = '';
+      feeds.sort((a, b) => b.timestamp - a.timestamp);
+      feeds.forEach(feed => {
         const div = document.createElement('div');
         div.className = 'feed-entry';
-        div.innerHTML = `<strong>${feed.feedingType}</strong> - ${feed.mood} <br>
-                         <small>${new Date(feed.timestamp).toLocaleString()}</small>`;
-        feedList.appendChild(div);
+        div.textContent = `${new Date(feed.timestamp).toLocaleString()} - ${feed.type} (${feed.mood})`;
+        feedHistoryElement.appendChild(div);
       });
-
-      latestFeedTime = new Date(sortedFeeds[0].timestamp);
-      updateLastFed(); // update immediately when data changes
     }
-  });
 
-  function updateLastFed() {
-    if (latestFeedTime) {
-      const diffMs = new Date() - latestFeedTime;
-      const diffMins = Math.floor(diffMs / 60000);
-      if (diffMins < 1) {
-        lastFedDisplay.textContent = "Last fed: just now";
-      } else if (diffMins < 60) {
-        lastFedDisplay.textContent = `Last fed: ${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-      } else {
-        const hours = Math.floor(diffMins / 60);
-        const mins = diffMins % 60;
-        lastFedDisplay.textContent = `Last fed: ${hours}h ${mins}m ago`;
+    // Listen for changes
+    db.ref('feeds').on('value', snapshot => {
+      const data = snapshot.val();
+      if (!data) {
+        lastFedElement.textContent = "Last fed: no data yet";
+        feedHistoryElement.innerHTML = '';
+        return;
       }
-    } else {
-      lastFedDisplay.textContent = "Last fed: —";
-    }
-  }
-
-  setInterval(updateLastFed, 10000); // update every 10s
-</script>
-
+      const feeds = Object.values(data);
+      updateLastFed(feeds);
+      renderHistory(feeds);
+    });
+  </script>
 </body>
 </html>

@@ -6,21 +6,21 @@
   <title>Niko's Feeding Tracker</title>
   <style>
     body {
-  font-family: Arial, sans-serif;
-  background-color: #b3d9ff; /* Baby blue base */
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 40px,
-    rgba(255,255,255,0.3) 40px,
-    rgba(255,255,255,0.3) 80px
-  ),
-  url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ctext x='20' y='40' font-size='40'%3E🪿%3C/text%3E%3Ctext x='100' y='140' font-size='40'%3E🦀%3C/text%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-}
+      font-family: Arial, sans-serif;
+      background-color: #b3d9ff; /* Baby blue base */
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.3) 40px,
+        rgba(255,255,255,0.3) 80px
+      ),
+      url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ctext x='20' y='40' font-size='40'%3E🪿%3C/text%3E%3Ctext x='100' y='140' font-size='40'%3E🦀%3C/text%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
     h1 {
       color: #003366;
     }
@@ -87,12 +87,10 @@
         <option value="Bottle - Breast Milk">Bottle - Breast Milk</option>
       </select>
 
-      <h3>Mood During Feeding</h3>
-      <select id="moodSelect">
-        <option value="Happy">Happy</option>
-        <option value="Easy">Easy</option>
-        <option value="Struggling">Struggling</option>
-        <option value="Didn't eat">Didn't eat</option>
+      <h3>Side</h3>
+      <select id="sideSelect">
+        <option value="Left">Left</option>
+        <option value="Right">Right</option>
       </select>
 
       <h3>Amount (optional)</h3>
@@ -114,11 +112,9 @@
           <option value="Bottle - Formula">Bottle - Formula</option>
           <option value="Bottle - Breast Milk">Bottle - Breast Milk</option>
         </select>
-        <select id="missedMoodSelect">
-          <option value="Happy">Happy</option>
-          <option value="Easy">Easy</option>
-          <option value="Struggling">Struggling</option>
-          <option value="Didn't eat">Didn't eat</option>
+        <select id="missedSideSelect">
+          <option value="Left">Left</option>
+          <option value="Right">Right</option>
         </select>
         <select id="missedAmountSelect">
           <option value="">Not recorded</option>
@@ -145,7 +141,7 @@
       authDomain: "niko-s-feeding-tracker.firebaseapp.com",
       databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
       projectId: "niko-s-feeding-tracker",
-      storageBucket: "niko-s-feeding-tracker.firebasestorage.app",
+      storageBucket: "niko-s-feeding-tracker.appspot.com", // ✅ fixed
       messagingSenderId: "905511735532",
       appId: "1:905511735532:web:e570c521ec91dee88895c9"
     };
@@ -172,10 +168,10 @@
 
     function logFeedNow() {
       const type = document.getElementById('typeSelect').value;
-      const mood = document.getElementById('moodSelect').value;
+      const side = document.getElementById('sideSelect').value;
       const amount = document.getElementById('amountSelect').value;
       const timestamp = Date.now();
-      saveFeed(type, mood, amount, timestamp);
+      saveFeed(type, side, amount, timestamp);
     }
 
     function toggleMissedForm() {
@@ -184,7 +180,7 @@
 
     function logMissedFeed() {
       const type = document.getElementById('missedTypeSelect').value;
-      const mood = document.getElementById('missedMoodSelect').value;
+      const side = document.getElementById('missedSideSelect').value;
       const amount = document.getElementById('missedAmountSelect').value;
       const timeValue = document.getElementById('missedTime').value;
       if (!timeValue) {
@@ -192,12 +188,12 @@
         return;
       }
       const timestamp = new Date(timeValue).getTime();
-      saveFeed(type, mood, amount, timestamp);
+      saveFeed(type, side, amount, timestamp);
       toggleMissedForm();
     }
 
-    function saveFeed(type, mood, amount, timestamp) {
-      db.ref('feeds').push({ type, mood, amount, timestamp });
+    function saveFeed(type, side, amount, timestamp) {
+      db.ref('feeds').push({ type, side, amount, timestamp });
     }
 
     function deleteFeed(id) {
@@ -214,7 +210,8 @@
       feeds.sort((a, b) => b.timestamp - a.timestamp);
       const lastFeed = feeds[0];
       const timeAgo = timeSince(new Date(lastFeed.timestamp));
-      lastFedElement.textContent = `Last fed: ${timeAgo} ago (${lastFeed.type}${lastFeed.amount ? ", " + lastFeed.amount : ""}, Mood: ${lastFeed.mood})`;
+      const sideInfo = lastFeed.side ? `, Side: ${lastFeed.side}` : (lastFeed.mood ? `, Side: ${lastFeed.mood}` : "");
+      lastFedElement.textContent = `Last fed: ${timeAgo} ago (${lastFeed.type}${lastFeed.amount ? ", " + lastFeed.amount : ""}${sideInfo})`;
     }
 
     function timeSince(date) {
@@ -233,8 +230,9 @@
       feeds.forEach(feed => {
         const div = document.createElement('div');
         div.className = 'feed-entry';
+        const sideInfo = feed.side ? feed.side : (feed.mood ? feed.mood : "");
         div.innerHTML = `
-          <span>${new Date(feed.timestamp).toLocaleString()} - ${feed.type}${feed.amount ? " (" + feed.amount + ")" : ""} (${feed.mood})</span>
+          <span>${new Date(feed.timestamp).toLocaleString()} - ${feed.type}${feed.amount ? " (" + feed.amount + ")" : ""}${sideInfo ? " (" + sideInfo + ")" : ""}</span>
           <button class="delete-btn" onclick="deleteFeed('${feed.id}')">❌</button>
         `;
         feedHistoryElement.appendChild(div);

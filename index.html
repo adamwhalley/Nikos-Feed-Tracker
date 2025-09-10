@@ -74,11 +74,9 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <h1>Niko's Feeding Tracker</h1>
     <div class="last-fed" id="lastFed">Last fed: calculating...</div>
-
     <div>
       <h3>Feeding Type</h3>
       <select id="typeSelect">
@@ -86,23 +84,18 @@
         <option value="Bottle - Formula">Bottle - Formula</option>
         <option value="Bottle - Breast Milk">Bottle - Breast Milk</option>
       </select>
-
       <h3>Side</h3>
       <select id="sideSelect">
         <option value="Left">Left</option>
         <option value="Right">Right</option>
       </select>
-
       <h3>Amount (optional)</h3>
       <select id="amountSelect">
         <option value="">Not recorded</option>
       </select>
-
       <button onclick="logFeedNow()">Log Feed Now</button>
     </div>
-
     <hr>
-
     <div>
       <h3>Add Missed Feed</h3>
       <button onclick="toggleMissedForm()">Add Missed Feed</button>
@@ -123,19 +116,14 @@
         <button onclick="logMissedFeed()">Save Missed Feed</button>
       </div>
     </div>
-
     <hr>
-
     <h3>Feeding History</h3>
     <div id="feedHistory"></div>
   </div>
-
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
   <script>
-    // Firebase config (corrected storageBucket!)
     const firebaseConfig = { 
       apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
       authDomain: "niko-s-feeding-tracker.firebaseapp.com",
@@ -145,7 +133,6 @@
       messagingSenderId: "905511735532",
       appId: "1:905511735532:web:e570c521ec91dee88895c9",
     };
-
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -153,7 +140,6 @@
     const lastFedElement = document.getElementById('lastFed');
     const feedHistoryElement = document.getElementById('feedHistory');
 
-    // Populate amount dropdowns
     function populateAmountDropdown(id) {
       const select = document.getElementById(id);
       for (let ml = 50; ml <= 200; ml += 5) {
@@ -207,7 +193,7 @@
     }
 
     function updateLastFed(feeds) {
-      if (feeds.length === 0) {
+      if (!feeds.length) {
         lastFedElement.textContent = "Last fed: no data yet";
         return;
       }
@@ -243,7 +229,7 @@
       });
     }
 
-    // Live listener
+    // Live listener for changes in 'feeds' node
     db.ref('feeds').on('value', snapshot => {
       const data = snapshot.val();
       if (!data) {

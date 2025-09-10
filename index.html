@@ -135,15 +135,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase config
+    // Firebase config (corrected storageBucket!)
     const firebaseConfig = { 
-  apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
-  authDomain: "niko-s-feeding-tracker.firebaseapp.com",
-  databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
-  projectId: "niko-s-feeding-tracker",
-  storageBucket: "niko-s-feeding-tracker.firebasestorage.app",
-  messagingSenderId: "905511735532",
-  appId: "1:905511735532:web:e570c521ec91dee88895c9",
+      apiKey: "AIzaSyBpEPACS_GPGQYYvGzFZW3nXEnNmGzTpQc",
+      authDomain: "niko-s-feeding-tracker.firebaseapp.com",
+      databaseURL: "https://niko-s-feeding-tracker-default-rtdb.firebaseio.com",
+      projectId: "niko-s-feeding-tracker",
+      storageBucket: "niko-s-feeding-tracker.appspot.com",
+      messagingSenderId: "905511735532",
+      appId: "1:905511735532:web:e570c521ec91dee88895c9",
     };
 
     // Initialize Firebase
@@ -193,12 +193,16 @@
     }
 
     function saveFeed(type, side, amount, timestamp) {
-      db.ref('feeds').push({ type, side, amount, timestamp });
+      db.ref('feeds').push({ type, side, amount, timestamp })
+        .then(() => console.log("Feed saved:", type, side, amount, timestamp))
+        .catch(err => console.error("Error saving feed:", err));
     }
 
     function deleteFeed(id) {
       if (confirm("Delete this feed entry?")) {
-        db.ref('feeds/' + id).remove();
+        db.ref('feeds/' + id).remove()
+          .then(() => console.log("Deleted feed:", id))
+          .catch(err => console.error("Error deleting:", err));
       }
     }
 
@@ -210,7 +214,7 @@
       feeds.sort((a, b) => b.timestamp - a.timestamp);
       const lastFeed = feeds[0];
       const timeAgo = timeSince(new Date(lastFeed.timestamp));
-      const sideInfo = lastFeed.side ? `, Side: ${lastFeed.side}` : (lastFeed.mood ? `, Side: ${lastFeed.mood}` : "");
+      const sideInfo = lastFeed.side ? `, Side: ${lastFeed.side}` : "";
       lastFedElement.textContent = `Last fed: ${timeAgo} ago (${lastFeed.type}${lastFeed.amount ? ", " + lastFeed.amount : ""}${sideInfo})`;
     }
 
@@ -230,7 +234,7 @@
       feeds.forEach(feed => {
         const div = document.createElement('div');
         div.className = 'feed-entry';
-        const sideInfo = feed.side ? feed.side : (feed.mood ? feed.mood : "");
+        const sideInfo = feed.side ? feed.side : "";
         div.innerHTML = `
           <span>${new Date(feed.timestamp).toLocaleString()} - ${feed.type}${feed.amount ? " (" + feed.amount + ")" : ""}${sideInfo ? " (" + sideInfo + ")" : ""}</span>
           <button class="delete-btn" onclick="deleteFeed('${feed.id}')">❌</button>
